@@ -1,0 +1,32 @@
+query sportEventListByFilters($offset:Int!, $limit:Int!){
+    sportEventListByFilters(marketStatuses:[ACTIVE], matchStatuses: [NOT_STARTED, LIVE], offset:$offset, limit:$limit){
+        sportEvents{
+            id
+            providerId
+            fixture {
+                startTime
+                sportId
+                status
+                tournament {
+                    id,
+                    sportId
+                }
+                competitors {
+                    id,
+                    type
+                }
+            }
+            markets {
+                id,
+                status,
+                typeId,
+                odds {
+                    id,
+                    value,
+                    status,
+                    competitorIds
+                }
+            }
+        }
+    }
+}

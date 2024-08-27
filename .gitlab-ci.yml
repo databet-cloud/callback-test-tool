@@ -1,0 +1,7 @@
+include:
+  project: infra/pipelines
+  file: .go-lang-gitlab-ci.yml
+
+variables:
+  LINTER_CONFIG: "databet"
+  MIN_LINE_COVERAGE: 1 # project did not cover by tests
