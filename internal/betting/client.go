@@ -5,6 +5,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"io"
 	"net/http"
 	"net/url"
 
@@ -32,12 +33,12 @@ func NewClient(u string, httpClient *http.Client, logger *zap.Logger) *Client {
 func (c *Client) GetToken(ctx context.Context, data map[string]any) (string, error) {
 	body, err := json.Marshal(data)
 	if err != nil {
-		return "", fmt.Errorf("failed to marshal request body: %w", err)
+		return "", fmt.Errorf("marshal request body: %w", err)
 	}
 
 	destinationURL, err := url.JoinPath(c.url, tokenCreatePath)
 	if err != nil {
-		return "", fmt.Errorf("failed to generate destination URL: %w", err)
+		return "", fmt.Errorf("generate destination URL: %w", err)
 	}
 
 	req, err := http.NewRequestWithContext(
@@ -47,28 +48,35 @@ func (c *Client) GetToken(ctx context.Context, data map[string]any) (string, err
 		bytes.NewReader(body),
 	)
 	if err != nil {
-		return "", fmt.Errorf("failed to create request: %w", err)
+		return "", fmt.Errorf("create request: %w", err)
 	}
 
 	req.Header.Set("Content-Type", "application/json")
 
 	response, err := c.httpClient.Do(req)
 	if err != nil {
-		return "", fmt.Errorf("failed to send request: %w", err)
-	}
-
-	if response.StatusCode != http.StatusOK {
-		return "", fmt.Errorf("invalid response status code: %d", response.StatusCode)
+		return "", fmt.Errorf("send request: %w", err)
 	}
 
 	defer response.Body.Close()
+
+	rawBody, err := io.ReadAll(response.Body)
+	if err != nil {
+		return "", fmt.Errorf("read body: %w", err)
+	}
+
+	if response.StatusCode != http.StatusOK {
+		c.log.Error("failed to create token", zap.ByteString("response_body", rawBody))
+
+		return "", fmt.Errorf("invalid response status code: %d", response.StatusCode)
+	}
 
 	res := struct {
 		Token string `json:"token"`
 	}{}
 
-	if err := json.NewDecoder(response.Body).Decode(&res); err != nil {
-		return "", fmt.Errorf("failed to decode response: %w", err)
+	if err := json.Unmarshal(rawBody, &res); err != nil {
+		return "", fmt.Errorf("decode response: %w", err)
 	}
 
 	return res.Token, nil

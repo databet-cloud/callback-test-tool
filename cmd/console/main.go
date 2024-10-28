@@ -2,6 +2,8 @@ package main
 
 import (
 	"context"
+	_ "embed"
+	"encoding/json"
 	"net/http"
 
 	"github.com/spf13/cobra"
@@ -36,19 +38,23 @@ func main() {
 	}
 }
 
+//go:embed token_create_request.json
+var rawTokenCreateRequest []byte
+
 func run(ctx context.Context, cfg config.Configuration) {
 	var (
-		foreignParams = map[string]any{
-			"locale":    "en",
-			"currency":  "usd",
-			"player_id": cfg.PlayerID,
-		}
-		log           = MustCreateLogger(cfg)
-		playerBalance = balance.NewService(log)
-		bettingClient = MustCreateBettingClient(cfg, log.Named("betting"))
+		tokenCreateReq = map[string]any{}
+		log            = MustCreateLogger(cfg)
+		playerBalance  = balance.NewService(log)
+		bettingClient  = MustCreateBettingClient(cfg, log.Named("betting"))
 	)
 
-	authToken, err := bettingClient.GetToken(ctx, foreignParams)
+	err := json.Unmarshal(rawTokenCreateRequest, &tokenCreateReq)
+	if err != nil {
+		panic(err)
+	}
+
+	authToken, err := bettingClient.GetToken(ctx, tokenCreateReq)
 	if err != nil {
 		log.Fatal("failed to get auth token", zap.Error(err))
 	}
@@ -56,10 +62,10 @@ func run(ctx context.Context, cfg config.Configuration) {
 	log.Info("authenticated", zap.String("token", authToken))
 
 	userSv := service.NewService(
-		cfg.PlayerID,
+		tokenCreateReq["player_id"].(string),
 		playerBalance,
 		MustCreateSportsBookClient(cfg, authToken, log.Named("sports_book")),
-		callback.NewClient(cfg.CallbackServerURL, foreignParams, http.DefaultClient, log),
+		callback.NewClient(cfg.CallbackServerURL, extractForeignParams(tokenCreateReq), http.DefaultClient, log),
 		calculator.NewCalculator(calculator.NewRefundCalc(log, former.FormExpresses), log),
 		log,
 	)
@@ -69,4 +75,13 @@ func run(ctx context.Context, cfg config.Configuration) {
 	}
 
 	prompt.ProcessCommands(command.Tree(ctx, userSv, cfg, log))
+}
+
+func extractForeignParams(tokenCreateReq map[string]any) map[string]any {
+	v, ok := tokenCreateReq["params"]
+	if !ok {
+		return map[string]any{}
+	}
+
+	return v.(map[string]any)
 }

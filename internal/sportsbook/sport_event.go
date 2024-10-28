@@ -15,14 +15,13 @@ type (
 )
 
 const (
-	OddStatusNotResulted      OddStatus = "NOT_RESULTED"
-	OddStatusWin              OddStatus = "WIN"
-	OddStatusLoss             OddStatus = "LOSS"
-	OddStatusHalfWin          OddStatus = "HALF_WIN"
-	OddStatusHalfLoss         OddStatus = "HALF_LOSS"
-	OddStatusRefunded         OddStatus = "REFUNDED"
-	OddStatusCancelled        OddStatus = "CANCELLED"
-	OddStatusRefundedManually OddStatus = "REFUNDED_MANUALLY"
+	OddStatusNotResulted OddStatus = "NOT_RESULTED"
+	OddStatusWin         OddStatus = "WIN"
+	OddStatusLoss        OddStatus = "LOSS"
+	OddStatusHalfWin     OddStatus = "HALF_WIN"
+	OddStatusHalfLoss    OddStatus = "HALF_LOSS"
+	OddStatusRefunded    OddStatus = "REFUNDED"
+	OddStatusCancelled   OddStatus = "CANCELLED"
 
 	MatchStatusNotStarted MatchStatus = "NOT_STARTED"
 	MatchStatusLive       MatchStatus = "LIVE"
@@ -74,8 +73,6 @@ func (s OddStatus) Int() int {
 		return 5
 	case OddStatusCancelled:
 		return 6
-	case OddStatusRefundedManually:
-		return 7
 	}
 
 	panic("invalid oddStatus")

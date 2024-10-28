@@ -6,6 +6,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"io"
 	"net/http"
 	"net/http/httputil"
 	"net/url"
@@ -105,6 +106,12 @@ func (c *Client) sendRequest(ctx context.Context, path string, body any) (*http.
 	response, err := c.httpClient.Do(req)
 	if err != nil {
 		return nil, fmt.Errorf("failed to send request: %w", err)
+	}
+
+	if response.StatusCode != http.StatusNoContent {
+		rawBody, _ := io.ReadAll(response.Body)
+
+		return nil, fmt.Errorf("unknown status code %d, body %s", response.StatusCode, rawBody)
 	}
 
 	return response, nil

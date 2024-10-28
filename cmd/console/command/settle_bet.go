@@ -41,7 +41,6 @@ func settleBet(ctx context.Context, sv *service.Service, log *zap.Logger) *promp
 									sportsbook.OddStatusLoss,
 									sportsbook.OddStatusHalfLoss,
 									sportsbook.OddStatusRefunded,
-									sportsbook.OddStatusRefundedManually,
 								)
 								if err != nil {
 									log.Error("failed to set odd status", zap.Error(err))

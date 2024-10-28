@@ -1,0 +1,15 @@
+{
+  "locale": "en",
+  "currency": "EUR",
+  "player_id": "2948",
+  "params": {
+    "some_token": "MDRjZjdlZjMtZjdiYy00YmRmLWEwYzMtYjI2ODZhY2IxZGYy|eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE3MzAxMzQ0MDIsImV4cCI6MTczMDEzODAwMiwiaXNzIjoidGVzdC1hcGkubnViZXQuY29tIiwiZGF0YSI6eyJ1c2VySUQiOjI4OTgsImV4dGVybmFsSUQiOiIyOTQ4IiwidXNlck5hbWUiOiJvcmtoYW4rNzlAdmFuYWxhdXJpLmNvbSJ9fQ.WdtcNnRt3WXFnpE38I9zAxZmyK_cUfr4c21CqgZLRkU",
+    "internal_player_id": "2948",
+    "session_id": "MDRjZjdlZjMtZjdiYy00YmRmLWEwYzMtYjI2ODZhY2IxZGYy|eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE3MzAxMzQ0MDIsImV4cCI6MTczMDEzODAwMiwiaXNzIjoidGVzdC1hcGkubnViZXQuY29tIiwiZGF0YSI6eyJ1c2VySUQiOjI4OTgsImV4dGVybmFsSUQiOiIyOTQ4IiwidXNlck5hbWUiOiJvcmtoYW4rNzlAdmFuYWxhdXJpLmNvbSJ9fQ.WdtcNnRt3WXFnpE38I9zAxZmyK_cUfr4c21CqgZLRkU"
+  },
+  "context": {
+    "bet": {
+      "min_stake_sum": "1.00"
+    }
+  }
+}

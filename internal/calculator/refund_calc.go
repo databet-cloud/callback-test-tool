@@ -192,7 +192,7 @@ func (c *RefundCalc) calcExpress(
 				return nil, err
 			}
 
-		case sportsbook.OddStatusRefunded, sportsbook.OddStatusRefundedManually:
+		case sportsbook.OddStatusRefunded:
 			_, err := ctx.Mul(r, r, c.apdFromString("1"))
 			if err != nil {
 				return nil, err

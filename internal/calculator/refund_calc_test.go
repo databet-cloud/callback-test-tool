@@ -58,7 +58,7 @@ func TestRefundCalc_Calc(t *testing.T) {
 				{
 
 					OddRatio:  toDecimal("2.5"),
-					OddStatus: sportsbook.OddStatusRefundedManually,
+					OddStatus: sportsbook.OddStatusRefunded,
 				},
 			}),
 			toDecimal("5"),

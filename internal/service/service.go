@@ -239,7 +239,7 @@ func (s *Service) SettleBet(ctx context.Context, betID string, odds []*callback.
 	}
 
 	switch {
-	case bet.RequestType != callback.BetCashOutOrdersAcceptedRequestType:
+	case bet.RequestType == callback.BetCashOutOrdersAcceptedRequestType:
 		// do nothing
 	case settleType == callback.WinSettleType:
 		s.playerBalance.WithdrawHold(bet.PrivateStake) // remove stake from hold

@@ -13,17 +13,17 @@ type Balance struct {
 }
 
 type Service struct {
-	mu     sync.RWMutex
-	active *apd.Decimal
-	hold   *apd.Decimal
-	log    *zap.Logger
+	mu   sync.RWMutex
+	left *apd.Decimal
+	hold *apd.Decimal
+	log  *zap.Logger
 }
 
 func NewService(log *zap.Logger) *Service {
 	return &Service{
-		active: apd.New(0, 0),
-		hold:   apd.New(0, 0),
-		log:    log,
+		left: apd.New(0, 0),
+		hold: apd.New(0, 0),
+		log:  log,
 	}
 }
 
@@ -31,7 +31,7 @@ func (s *Service) Deposit(amount *apd.Decimal) {
 	s.mu.Lock()
 	defer s.mu.Unlock()
 
-	_, err := s.newApdCtx().Add(s.active, s.active, amount)
+	_, err := s.newApdCtx().Add(s.left, s.left, amount)
 	if err != nil {
 		s.log.Error("failed to deposit", zap.Any("amount", amount), zap.Error(err))
 	}
@@ -62,7 +62,7 @@ func (s *Service) Withdraw(amount *apd.Decimal) {
 	s.mu.Lock()
 	defer s.mu.Unlock()
 
-	_, err := s.newApdCtx().Sub(s.active, s.active, amount)
+	_, err := s.newApdCtx().Sub(s.left, s.left, amount)
 	if err != nil {
 		s.log.Error("failed to withdraw", zap.Any("amount", amount), zap.Error(err))
 	}
@@ -84,7 +84,7 @@ func (s *Service) Hold(amount *apd.Decimal) {
 
 	ctx := s.newApdCtx()
 
-	_, err := ctx.Sub(s.active, s.active, amount)
+	_, err := ctx.Sub(s.left, s.left, amount)
 	if err != nil {
 		s.log.Error("failed to hold", zap.Any("amount", amount), zap.Error(err))
 
@@ -105,7 +105,7 @@ func (s *Service) UnHold(amount *apd.Decimal) {
 
 	ctx := s.newApdCtx()
 
-	_, err := ctx.Add(s.active, s.active, amount)
+	_, err := ctx.Add(s.left, s.left, amount)
 	if err != nil {
 		s.log.Error("failed to hold", zap.Any("amount", amount), zap.Error(err))
 
@@ -125,7 +125,7 @@ func (s *Service) State() Balance {
 	defer s.mu.RUnlock()
 
 	return Balance{
-		Available: s.active,
+		Available: s.left,
 		Hold:      s.hold,
 	}
 }
