@@ -395,7 +395,6 @@ func (s *Service) DeclineBetCashOut(ctx context.Context, betID string) {
 
 		RequestID:       uuid.NewString(),
 		BetID:           bet.BetID,
-		CashOutOrderID:  uuid.NewString(),
 		CashOutOrderIDs: []string{bet.CashOutOrderID},
 	}
 
