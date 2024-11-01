@@ -16,7 +16,8 @@ import (
 )
 
 const (
-	selectBetLabel = "Select bet (<id>:<state>_[<created>]:[<updated>])"
+	selectBetLabel     = "Select bet (<id>:<state>_[<created>]:[<updated>])"
+	selectCashOutLabel = "Select cash-out (<id>:<state>_[<created>]:[<updated>])"
 )
 
 func Tree(ctx context.Context, sv *service.Service, cfg config.Configuration, log *zap.Logger) *prompt.Tree {
@@ -52,6 +53,17 @@ func betDocLabel(doc *storage.Document[*callback.Data]) string {
 	return fmt.Sprintf(
 		"%s:%s_[%s]:[%s]",
 		doc.Value.BetID,
+		doc.Value.RequestType,
+		doc.CreatedAt.Format(time.RFC3339),
+		doc.UpdatedAt.Format(time.RFC3339),
+	)
+}
+
+func cashOutDocLabel(doc *storage.Document[*callback.Data]) string {
+	return fmt.Sprintf(
+		"%s:%s:%s_[%s]:[%s]",
+		doc.Value.BetID,
+		doc.Value.CashOutOrderID,
 		doc.Value.RequestType,
 		doc.CreatedAt.Format(time.RFC3339),
 		doc.UpdatedAt.Format(time.RFC3339),

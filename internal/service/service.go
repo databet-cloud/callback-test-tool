@@ -29,7 +29,8 @@ type Service struct {
 	calculator       *calculator.Calculator
 
 	// list of bets in actual state
-	bets *storage.Storage[*callback.Data]
+	bets     *storage.Storage[*callback.Data]
+	cashOuts *storage.Storage[*callback.Data]
 	// all sent requests
 	sentRequests *storage.Storage[*callback.Data]
 
@@ -51,6 +52,7 @@ func NewService(
 		callbackClient:   callbackClient,
 		calculator:       calc,
 		bets:             storage.New[*callback.Data](100),
+		cashOuts:         storage.New[*callback.Data](100),
 		sentRequests:     storage.New[*callback.Data](400),
 		log:              log,
 	}
@@ -160,7 +162,7 @@ func (s *Service) DeclineBet(ctx context.Context, betID string, restrictionType 
 
 		RequestID:    uuid.NewString(),
 		BetID:        bet.BetID,
-		BetPlayerID:  bet.BetPlayerID,
+		BetPlayerID:  s.playerID,
 		Restrictions: []callback.Restriction{restriction},
 	}
 
@@ -224,7 +226,7 @@ func (s *Service) SettleBet(ctx context.Context, betID string, odds []*callback.
 
 		RequestID:    uuid.NewString(),
 		BetID:        bet.BetID,
-		BetPlayerID:  bet.BetPlayerID,
+		BetPlayerID:  s.playerID,
 		BetOdds:      odds,
 		SettleAmount: formatApd(settleAmount),
 		SettleType:   settleType,
@@ -284,7 +286,7 @@ func (s *Service) UnSettleBet(ctx context.Context, betID string) {
 		PrivateCashOutAmount:  nil,
 		RequestID:             uuid.NewString(),
 		BetID:                 bet.BetID,
-		BetPlayerID:           bet.BetPlayerID,
+		BetPlayerID:           s.playerID,
 		UnSettleAmount:        bet.SettleAmount,
 	}
 
@@ -369,19 +371,29 @@ func (s *Service) AcceptBetCashOut(ctx context.Context, betID string) {
 	s.log.Info("Expect balance after request", zap.Any("balance", s.PlayerBalance()))
 
 	s.sentRequests.Insert(data)
-	s.bets.Replace(data, betFindFunc)
+	s.bets.Replace(bet, betFindFunc)
+	s.cashOuts.Insert(data)
 
 	s.processResponse(response)
 }
 
-func (s *Service) DeclineBetCashOut(ctx context.Context, betID string) {
+func (s *Service) DeclineBetCashOut(ctx context.Context, betID, cashOutOrderID string) {
 	betFindFunc := func(d *callback.Data) bool {
-		return d.BetID == betID && d.RequestType == callback.BetCashOutOrdersAcceptedRequestType
+		return d.BetID == betID
+	}
+	cashOutFindFunc := func(d *callback.Data) bool {
+		return d.CashOutOrderID == cashOutOrderID
 	}
 
 	bet, ok := s.bets.Get(betFindFunc)
 	if !ok {
 		s.log.Error("failed to find bet", zap.String("id", betID))
+		return
+	}
+
+	cashOut, ok := s.cashOuts.Get(cashOutFindFunc)
+	if !ok {
+		s.log.Error("failed to find cash-out", zap.String("id", cashOutOrderID))
 		return
 	}
 
@@ -395,7 +407,7 @@ func (s *Service) DeclineBetCashOut(ctx context.Context, betID string) {
 
 		RequestID:       uuid.NewString(),
 		BetID:           bet.BetID,
-		CashOutOrderIDs: []string{bet.CashOutOrderID},
+		CashOutOrderIDs: []string{cashOut.CashOutOrderID},
 	}
 
 	s.log.Info("Player balance before request", zap.Any("balance", s.PlayerBalance()))
@@ -406,12 +418,14 @@ func (s *Service) DeclineBetCashOut(ctx context.Context, betID string) {
 		return
 	}
 
-	s.playerBalance.DepositHold(bet.PrivateStake)
-	s.playerBalance.Withdraw(bet.PrivateCashOutAmount)
+	s.playerBalance.DepositHold(cashOut.PrivateStake)
+	s.playerBalance.Withdraw(cashOut.PrivateCashOutAmount)
 	s.log.Info("Expect balance after request", zap.Any("balance", s.PlayerBalance()))
 
+	data.CashOutOrderID = cashOutOrderID
 	s.sentRequests.Insert(data)
-	s.bets.Replace(data, betFindFunc)
+	s.bets.Replace(bet, betFindFunc)
+	s.cashOuts.Replace(data, cashOutFindFunc)
 
 	s.processResponse(response)
 }
@@ -440,6 +454,16 @@ func (s *Service) SentRequests(types ...callback.RequestType) []*storage.Documen
 
 func (s *Service) Bets(types ...callback.RequestType) []*storage.Document[*callback.Data] {
 	docs := s.bets.GetDocuments(func(data *callback.Data) bool {
+		return len(types) == 0 || slices.Contains(types, data.RequestType)
+	})
+
+	slices.Reverse(docs)
+
+	return docs
+}
+
+func (s *Service) CashOuts(types ...callback.RequestType) []*storage.Document[*callback.Data] {
+	docs := s.cashOuts.GetDocuments(func(data *callback.Data) bool {
 		return len(types) == 0 || slices.Contains(types, data.RequestType)
 	})
 
