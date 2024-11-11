@@ -3,9 +3,9 @@ package command
 import (
 	"context"
 
-	"gitlab.databet.one/b2b/callback-test-tool/internal/callback"
-	"gitlab.databet.one/b2b/callback-test-tool/internal/prompt"
-	"gitlab.databet.one/b2b/callback-test-tool/internal/service"
+	"github.com/databet-cloud/callback-test-tool/internal/callback"
+	"github.com/databet-cloud/callback-test-tool/internal/prompt"
+	"github.com/databet-cloud/callback-test-tool/internal/service"
 )
 
 func placeBet(ctx context.Context, sv *service.Service) *prompt.Command {

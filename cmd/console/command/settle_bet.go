@@ -6,11 +6,11 @@ import (
 
 	"go.uber.org/zap"
 
-	"gitlab.databet.one/b2b/callback-test-tool/internal/callback"
-	"gitlab.databet.one/b2b/callback-test-tool/internal/prompt"
-	"gitlab.databet.one/b2b/callback-test-tool/internal/service"
-	"gitlab.databet.one/b2b/callback-test-tool/internal/sportsbook"
-	"gitlab.databet.one/b2b/callback-test-tool/internal/storage"
+	"github.com/databet-cloud/callback-test-tool/internal/callback"
+	"github.com/databet-cloud/callback-test-tool/internal/prompt"
+	"github.com/databet-cloud/callback-test-tool/internal/service"
+	"github.com/databet-cloud/callback-test-tool/internal/sportsbook"
+	"github.com/databet-cloud/callback-test-tool/internal/storage"
 )
 
 func settleBet(ctx context.Context, sv *service.Service, log *zap.Logger) *prompt.Command {

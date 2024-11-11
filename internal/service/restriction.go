@@ -5,7 +5,7 @@ import (
 
 	"github.com/cockroachdb/apd/v3"
 
-	"gitlab.databet.one/b2b/callback-test-tool/internal/callback"
+	"github.com/databet-cloud/callback-test-tool/internal/callback"
 )
 
 // nolint:funlen,gocyclo // its ok, because we generate all types of restrictions

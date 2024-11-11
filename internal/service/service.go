@@ -14,11 +14,11 @@ import (
 	"github.com/rs/xid"
 	"go.uber.org/zap"
 
-	"gitlab.databet.one/b2b/callback-test-tool/internal/balance"
-	"gitlab.databet.one/b2b/callback-test-tool/internal/calculator"
-	"gitlab.databet.one/b2b/callback-test-tool/internal/callback"
-	"gitlab.databet.one/b2b/callback-test-tool/internal/sportsbook"
-	"gitlab.databet.one/b2b/callback-test-tool/internal/storage"
+	"github.com/databet-cloud/callback-test-tool/internal/balance"
+	"github.com/databet-cloud/callback-test-tool/internal/calculator"
+	"github.com/databet-cloud/callback-test-tool/internal/callback"
+	"github.com/databet-cloud/callback-test-tool/internal/sportsbook"
+	"github.com/databet-cloud/callback-test-tool/internal/storage"
 )
 
 type Service struct {

@@ -8,11 +8,11 @@ import (
 
 	"go.uber.org/zap"
 
-	"gitlab.databet.one/b2b/callback-test-tool/cmd/console/config"
-	"gitlab.databet.one/b2b/callback-test-tool/internal/callback"
-	"gitlab.databet.one/b2b/callback-test-tool/internal/prompt"
-	"gitlab.databet.one/b2b/callback-test-tool/internal/service"
-	"gitlab.databet.one/b2b/callback-test-tool/internal/storage"
+	"github.com/databet-cloud/callback-test-tool/cmd/console/config"
+	"github.com/databet-cloud/callback-test-tool/internal/callback"
+	"github.com/databet-cloud/callback-test-tool/internal/prompt"
+	"github.com/databet-cloud/callback-test-tool/internal/service"
+	"github.com/databet-cloud/callback-test-tool/internal/storage"
 )
 
 const (

@@ -4,7 +4,7 @@ import (
 	"github.com/cockroachdb/apd/v3"
 	"go.uber.org/zap"
 
-	"gitlab.databet.one/b2b/callback-test-tool/internal/callback"
+	"github.com/databet-cloud/callback-test-tool/internal/callback"
 )
 
 type Calculator struct {

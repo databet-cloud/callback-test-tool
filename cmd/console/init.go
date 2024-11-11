@@ -8,9 +8,9 @@ import (
 	"github.com/machinebox/graphql"
 	"go.uber.org/zap"
 
-	"gitlab.databet.one/b2b/callback-test-tool/cmd/console/config"
-	"gitlab.databet.one/b2b/callback-test-tool/internal/betting"
-	"gitlab.databet.one/b2b/callback-test-tool/internal/sportsbook"
+	"github.com/databet-cloud/callback-test-tool/cmd/console/config"
+	"github.com/databet-cloud/callback-test-tool/internal/betting"
+	"github.com/databet-cloud/callback-test-tool/internal/sportsbook"
 )
 
 func MustCreateBettingClient(cfg config.Configuration, logger *zap.Logger) *betting.Client {

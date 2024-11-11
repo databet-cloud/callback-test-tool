@@ -1,4 +1,4 @@
-module gitlab.databet.one/b2b/callback-test-tool
+module github.com/databet-cloud/callback-test-tool
 
 go 1.22.4
 

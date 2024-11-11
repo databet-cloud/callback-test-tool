@@ -6,7 +6,7 @@ import (
 
 	"github.com/cockroachdb/apd/v3"
 
-	"gitlab.databet.one/b2b/callback-test-tool/internal/sportsbook"
+	"github.com/databet-cloud/callback-test-tool/internal/sportsbook"
 )
 
 type (

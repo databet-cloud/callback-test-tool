@@ -9,14 +9,14 @@ import (
 	"github.com/spf13/cobra"
 	"go.uber.org/zap"
 
-	"gitlab.databet.one/b2b/callback-test-tool/cmd/console/command"
-	"gitlab.databet.one/b2b/callback-test-tool/cmd/console/config"
-	"gitlab.databet.one/b2b/callback-test-tool/internal/balance"
-	"gitlab.databet.one/b2b/callback-test-tool/internal/calculator"
-	"gitlab.databet.one/b2b/callback-test-tool/internal/calculator/former"
-	"gitlab.databet.one/b2b/callback-test-tool/internal/callback"
-	"gitlab.databet.one/b2b/callback-test-tool/internal/prompt"
-	"gitlab.databet.one/b2b/callback-test-tool/internal/service"
+	"github.com/databet-cloud/callback-test-tool/cmd/console/command"
+	"github.com/databet-cloud/callback-test-tool/cmd/console/config"
+	"github.com/databet-cloud/callback-test-tool/internal/balance"
+	"github.com/databet-cloud/callback-test-tool/internal/calculator"
+	"github.com/databet-cloud/callback-test-tool/internal/calculator/former"
+	"github.com/databet-cloud/callback-test-tool/internal/callback"
+	"github.com/databet-cloud/callback-test-tool/internal/prompt"
+	"github.com/databet-cloud/callback-test-tool/internal/service"
 )
 
 func main() {
